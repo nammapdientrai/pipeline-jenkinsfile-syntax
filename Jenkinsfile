@@ -7,6 +7,7 @@ pipeline {
                 echo "On Non-Sequential Stage"
             }
         }
+
         stage('Sequential') {
             environment {
                 FOR_SEQUENTIAL = "some-value"
@@ -35,6 +36,14 @@ pipeline {
                             }
                         }
                     }
+                }
+            }
+        }
+
+        stage('success') {
+            stages {
+                steps {
+                    echo 'Success'
                 }
             }
         }
