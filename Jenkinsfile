@@ -41,10 +41,8 @@ pipeline {
         }
 
         stage('success') {
-            stages {
-                steps {
-                    echo 'Success'
-                }
+            steps {
+                echo 'Success'
             }
         }
     }
