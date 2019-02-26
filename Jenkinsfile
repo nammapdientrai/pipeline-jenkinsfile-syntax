@@ -4,7 +4,8 @@ pipeline {
     stages {
         stage('Check exist container') {
             steps {
-                echo "Check exist container"
+                def foo = "Check exist container"
+                sh "echo ${foo}"
             }
         }
     }
