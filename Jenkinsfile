@@ -43,11 +43,11 @@ pipeline {
                         sh "docker container stop ${NAME_CONTAINER_MYSQL}"
                         sh "docker container rm ${NAME_CONTAINER_MYSQL}"
                     }
-
-                    sh "docker run --name=${NAME_CONTAINER_MYSQL} -e MYSQL_ROOT_PASSWORD=${PASSWORD_MYSQL} -e MYSQL_DATABASE=${DATABASE_NAME} -d mysql"        
-                    sh "docker exec ${NAME_CONTAINER_MYSQL} chmod 777 /var/run/mysqld/mysqld.sock -R";
-                    sh "cat /home/namth22/backup.sql | docker exec -i ${NAME_CONTAINER_MYSQL} /usr/bin/mysql -u ${USERNAME_MYSQL} --password=${PASSWORD_MYSQL} ${DATABASE_NAME}"
                 }
+
+                sh "docker run --name=${NAME_CONTAINER_MYSQL} -e MYSQL_ROOT_PASSWORD=${PASSWORD_MYSQL} -e MYSQL_DATABASE=${DATABASE_NAME} -d mysql"        
+                sh "docker exec ${NAME_CONTAINER_MYSQL} chmod 777 /var/run/mysqld/. -R";
+                sh "cat /home/namth22/backup.sql | docker exec -i ${NAME_CONTAINER_MYSQL} /usr/bin/mysql -u ${USERNAME_MYSQL} --password=${PASSWORD_MYSQL} ${DATABASE_NAME}"
             }
         }
     }
