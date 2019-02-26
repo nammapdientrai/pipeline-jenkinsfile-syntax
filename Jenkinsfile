@@ -12,7 +12,7 @@ pipeline {
                     exist = sh(returnStdout: true, script: "docker ps -aq -f name=${NAME_CONTAINER_JDK}")
                     //status = sh(returnStdout: true, script: "docker ps -aq -f status=running -f name=${NAME_CONTAINER_JDK}")
                     
-                    if (exist != '0') {
+                    if (exist != "") {
                         sh 'docker container stop java-jdk'
                         sh 'docker container rm java-jdk'
                     }
