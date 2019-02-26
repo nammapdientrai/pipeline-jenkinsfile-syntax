@@ -1,10 +1,15 @@
 NAME_CONTAINER_JDK = 'java-jdk'
 
+NAME_CONTAINER_MYSQL = 'volume-mysql'
+USERNAME_MYSQL ='root'
+PASSWORD_MYSQL='123456789'
+DATABASE_NAME = 'test'
+
 pipeline {
     agent any
 
     stages {
-        stage('Check exist container') {
+        stage('Check exist container JDK') {
             steps {
                 script {
                     def exist = "0"
@@ -18,6 +23,29 @@ pipeline {
                     }
 
                     sh "docker run --name ${NAME_CONTAINER_JDK} -d -v /opt/tomcat/.jenkins/workspace/java-full-pipeline/demojenkins/target:/home -i openjdk"        
+                }
+            }
+        }
+
+
+
+        stage('Check exist container MYSQL') {
+            steps {
+                script {
+                    def exist = "0"
+                   
+                    exist = sh(returnStdout: true, script: "docker ps -aq -f name=${NAME_CONTAINER_MYSQL}")
+                    //status = sh(returnStdout: true, script: "docker ps -aq -f status=running -f name=${NAME_CONTAINER_JDK}")
+                    
+                    if (exist != "") {
+                        sh "docker exec ${NAME_CONTAINER_MYSQL} /usr/bin/mysqldump -u ${USERNAME_MYSQL} --password=${PASSWORD_MYSQL} ${DATABASE_NAME} > /home/namth22/backup.sql"
+                        
+                        sh "docker container stop ${NAME_CONTAINER_MYSQL}"
+                        sh "docker container rm ${NAME_CONTAINER_MYSQL}"
+                    }
+
+                    sh "docker run --name=${NAME_CONTAINER_MYSQL} -e MYSQL_ROOT_PASSWORD=${PASSWORD_MYSQL} -e MYSQL_DATABASE=${DATABASE_NAME} -d mysql"        
+                    sh "cat /home/namth22/backup.sql | docker exec -i ${NAME_CONTAINER_MYSQL} /usr/bin/mysql -u ${USERNAME_MYSQL} --password=${PASSWORD_MYSQL} ${DATABASE_NAME}"
                 }
             }
         }
