@@ -32,7 +32,7 @@ pipeline {
         stage('Check exist container MYSQL') {
             steps {
                 sh "docker exec java-mysql /usr/bin/mysqldump -u root --password=123456789 test > /home/namth22/backup.sql"
-                
+
                 script {
                     def exist = "0"
                    
@@ -45,6 +45,7 @@ pipeline {
                     }
 
                     sh "docker run --name=${NAME_CONTAINER_MYSQL} -e MYSQL_ROOT_PASSWORD=${PASSWORD_MYSQL} -e MYSQL_DATABASE=${DATABASE_NAME} -d mysql"        
+                    sh "docker exec ${NAME_CONTAINER_MYSQL} chmod 777 /var/run/mysqld/mysqld.sock -R";
                     sh "cat /home/namth22/backup.sql | docker exec -i ${NAME_CONTAINER_MYSQL} /usr/bin/mysql -u ${USERNAME_MYSQL} --password=${PASSWORD_MYSQL} ${DATABASE_NAME}"
                 }
             }
