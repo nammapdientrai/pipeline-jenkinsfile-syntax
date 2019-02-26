@@ -7,7 +7,10 @@ pipeline {
         stage('Check exist container') {
             steps {
                 script {
-                    def f = $(docker ps -aq -f status=exited -f name=java-jdk)
+                    def f = ""
+
+                    f = sh(returnStdout: true, script: 'docker ps -aq -f status=exited -f name=java-jdk')
+                    
                     echo "${f}"
                 }
             }
