@@ -1,4 +1,4 @@
-NAME_CONTAINER = 'java-jdk'
+NAME_CONTAINER_JDK = 'java-jdk'
 
 pipeline {
     agent any
@@ -7,11 +7,17 @@ pipeline {
         stage('Check exist container') {
             steps {
                 script {
-                    def f = ""
-
-                    f = sh(returnStdout: true, script: 'docker ps -aq -f status=exited -f name=java-jdk')
+                    def exist = "0"
+                   
+                    exist = sh(returnStdout: true, script: "docker ps -aq -f name=${NAME_CONTAINER_JDK}")
+                    //status = sh(returnStdout: true, script: "docker ps -aq -f status=running -f name=${NAME_CONTAINER_JDK}")
                     
-                    echo "${f}"
+                    if (exist != '0') {
+                        sh 'docker container stop java-jdk'
+                        sh 'docker container rm java-jdk'
+                    }
+
+                    sh "docker run --name ${NAME_CONTAINER_JDK} -d -v /opt/tomcat/.jenkins/workspace/java-full-pipeline/demojenkins/target:/home -i openjdk"        
                 }
             }
         }
