@@ -27,8 +27,6 @@ pipeline {
             }
         }
 
-
-
         stage('Check exist container MYSQL') {
             steps {
                 sh "docker exec java-mysql /usr/bin/mysqldump -u root --password=123456789 test > /home/namth22/backup.sql"
@@ -49,6 +47,7 @@ pipeline {
                 //sh "docker exec volume-mysql chmod -R 777 /var/run/mysqld/mysqld.sock";
                 sh "docker exec volume-mysql chmod -R 777 /var/run/.";
                 sh "docker exec volume-mysql chmod -R 777 /var/run/mysqld/.";
+                sh "docker exec volume-mysql mysql -uroot -p${PASSWORD_MYSQL} --socket=/var/run/mysqld/mysqld.sock -e "flush privileges;""
                 //sh "docker exec volume-mysql chmod -R 777 /var/run/mysqld/mysqld.sock";
                 sh "cat /home/namth22/backup.sql | docker exec -i ${NAME_CONTAINER_MYSQL} /usr/bin/mysql -u ${USERNAME_MYSQL} --password=${PASSWORD_MYSQL} ${DATABASE_NAME}"
             }
