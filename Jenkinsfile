@@ -44,7 +44,7 @@ pipeline {
                 }
 
                 sh "docker run --name=${NAME_CONTAINER_MYSQL} -e MYSQL_ROOT_PASSWORD=${PASSWORD_MYSQL} -e MYSQL_DATABASE=${DATABASE_NAME} -d mysql"        
-                sh "docker exec volume-mysql chown -R 777 /var/lib/mysql";
+                //sh "docker exec volume-mysql chmod -R 777 /var/lib/mysql";
                 sh "docker exec volume-mysql chmod -R 777 /var/run/.";
                 sh "docker exec volume-mysql chmod -R 777 /var/run/mysqld/.";
                 sh "docker exec volume-mysql mysql -uroot -p${PASSWORD_MYSQL} --socket=/var/run/mysqld/mysqld.sock -e 'flush privileges'"
